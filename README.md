@@ -2,6 +2,8 @@
 
 AI-driven comparison, testing and greenwashing screening for a one-day CRO hackathon.
 
+**English overview:** [Business context and end-to-end methodology](BUSINESS_AND_METHODOLOGY_SUMMARY.md).
+
 **主路径：在 Databricks 中运行 Python，调用团队已有的 Azure OpenAI，在 Notebook 内展示审核结果。本机只需要浏览器，不需要 Python、Streamlit、Docker 或 Node.js。**
 
 **公司电脑快速入口：** 打开 [Notebook](Green_Claims_Databricks.ipynb)，点击 **Download raw file** 下载，再导入 Databricks。也可以点击仓库的 **Code → Download ZIP** 获取完整项目。三分钟讲稿见 [PITCH_3_MINUTES.md](PITCH_3_MINUTES.md)。
