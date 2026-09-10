@@ -1,0 +1,418 @@
+[
+  {
+    "generated_at_utc": "2026-09-09T21:42:47.428804+00:00",
+    "mode": "Offline demo",
+    "model": null,
+    "summary": {
+      "contradicted": 3,
+      "insufficient_evidence": 0,
+      "not_comparable": 0,
+      "supported": 0
+    },
+    "findings": [
+      {
+        "claim_id": "C1",
+        "claim": "Our total Scope 1 and 2 greenhouse gas emissions fell by 30% in 2025 compared with 2024.",
+        "status": "contradicted",
+        "test_types": [
+          "numeric",
+          "metric_basis",
+          "time"
+        ],
+        "explanation": "A 30% intensity reduction is presented as an absolute emissions reduction. Total emissions actually rose by 8% on unchanged boundaries.",
+        "follow_up_question": "Will the company state that the reduction concerns intensity and disclose the absolute increase?",
+        "evidence": [
+          {
+            "id": "D0002",
+            "quote": "Total Scope 1 and 2 emissions increased from 100,000 tCO2e in 2024 to 108,000 tCO2e in 2025. Emissions intensity per tonne of product decreased by 30% in the same period.",
+            "location": "paragraph 2",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0004",
+            "quote": "Article 2 — Metric basis. A reduction in emissions intensity must not be described as a reduction in absolute emissions. The claim must specify the metric, unit, baseline year and reporting boundary.",
+            "location": "paragraph 4",
+            "quote_verified": true,
+            "candidate_only": true
+          },
+          {
+            "id": "R0008",
+            "quote": "Article 6 — Product claims. Full-life-cycle product carbon neutrality claims require evidence addressing the product life cycle, residual emissions and the means of neutralization. A corporate Scope 1 and 2 inventory alone is not product-level substantiation.",
+            "location": "paragraph 8",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C2",
+        "claim": "All electricity consumed by our owned factories in 2025 was renewable.",
+        "status": "contradicted",
+        "test_types": [
+          "numeric",
+          "scope"
+        ],
+        "explanation": "The same factories and period are covered, but the renewable share is 60%, not 100%.",
+        "follow_up_question": "What supports describing the remaining 40% as renewable?",
+        "evidence": [
+          {
+            "id": "D0003",
+            "quote": "In 2025, renewable electricity accounted for 60% of electricity consumed by all owned factories. The remaining 40% was non-renewable electricity.",
+            "location": "paragraph 3",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0005",
+            "quote": "Article 3 — Coverage. A renewable electricity or packaging claim that uses terms such as all, every, or worldwide must be substantiated across the whole stated population and period. Regional evidence alone does not substantiate an unrestricted global claim.",
+            "location": "paragraph 5",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C3",
+        "claim": "Our owned operations have already achieved net zero greenhouse gas emissions.",
+        "status": "contradicted",
+        "test_types": [
+          "time",
+          "target_vs_actual"
+        ],
+        "explanation": "A future 2040 target is presented as an achievement, which the disclosure explicitly contradicts.",
+        "follow_up_question": "Can the claim distinguish the future target from current performance?",
+        "evidence": [
+          {
+            "id": "D0004",
+            "quote": "Our target is net zero emissions for owned operations by 2040. Net zero has not yet been achieved.",
+            "location": "paragraph 4",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0006",
+            "quote": "Article 4 — Future targets. A future emissions target must be clearly distinguished from achieved performance. A net zero target for a future year must not be presented as net zero already achieved.",
+            "location": "paragraph 6",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      }
+    ],
+    "numeric_checks": [
+      {
+        "metric": "Scope 1 + 2 absolute emissions",
+        "unit": "tCO2e",
+        "baseline_year": 2024,
+        "current_year": 2025,
+        "baseline": 100000,
+        "current": 108000,
+        "calculated_change_pct": 8.0,
+        "method": "Python arithmetic on authored synthetic facts; not model-extracted."
+      }
+    ],
+    "warnings": [],
+    "regulation": {
+      "filename": "demo_regulation.md",
+      "version": "DEMO 2026-09 · FICTIONAL",
+      "sha256": "80d510a206f781fec9154ad2ca1300676fb155361d1680a8b04240ba244c7373",
+      "passage_count": 8,
+      "latest_version_verified": false,
+      "warnings": []
+    },
+    "regulation_passages_sent": 8,
+    "regulation_total_passages": 8,
+    "limitations": [
+      "Screening signals require human review; no legal compliance determination.",
+      "Uploaded version and legal applicability are not independently verified.",
+      "Quote existence is checked; semantic relevance and reasoning are not independently verified.",
+      "Long regulations use a lexical shortlist, so relevant provisions may be missed."
+    ]
+  },
+  {
+    "generated_at_utc": "2026-09-09T21:42:47.429883+00:00",
+    "mode": "Offline demo",
+    "model": null,
+    "summary": {
+      "contradicted": 0,
+      "insufficient_evidence": 2,
+      "not_comparable": 1,
+      "supported": 0
+    },
+    "findings": [
+      {
+        "claim_id": "C1",
+        "claim": "Every package sold worldwide in 2025 was recyclable in its sales market.",
+        "status": "insufficient_evidence",
+        "test_types": [
+          "scope"
+        ],
+        "explanation": "Regional evidence covers 60% of global sales. Missing evidence for the other markets does not prove their packaging is non-recyclable.",
+        "follow_up_question": "Can the company provide assessments for the remaining 40% of packaging sales?",
+        "evidence": [
+          {
+            "id": "D0002",
+            "quote": "Packaging recyclability assessments cover Europe, representing 60% of global packaging sales in 2025. No assessment is disclosed for the remaining markets.",
+            "location": "paragraph 2",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0005",
+            "quote": "Article 3 — Coverage. A renewable electricity or packaging claim that uses terms such as all, every, or worldwide must be substantiated across the whole stated population and period. Regional evidence alone does not substantiate an unrestricted global claim.",
+            "location": "paragraph 5",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C2",
+        "claim": "Every Blueleaf product sold in 2025 was carbon neutral across its full life cycle.",
+        "status": "insufficient_evidence",
+        "test_types": [
+          "scope",
+          "metric_basis"
+        ],
+        "explanation": "A corporate inventory does not establish full-life-cycle carbon neutrality for every product. The supplied material does not establish whether the claim is true or false.",
+        "follow_up_question": "Where are the product life-cycle calculations and neutralization evidence?",
+        "evidence": [
+          {
+            "id": "D0003",
+            "quote": "Product-level life-cycle emissions, residual emissions and neutralization evidence are not disclosed.",
+            "location": "paragraph 3",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0008",
+            "quote": "Article 6 — Product claims. Full-life-cycle product carbon neutrality claims require evidence addressing the product life cycle, residual emissions and the means of neutralization. A corporate Scope 1 and 2 inventory alone is not product-level substantiation.",
+            "location": "paragraph 8",
+            "quote_verified": true,
+            "candidate_only": true
+          },
+          {
+            "id": "R0003",
+            "quote": "Article 1 — Evidence. Environmental claims must be supported by evidence that covers the stated product, entity, reporting period and geographic scope. Missing evidence should trigger a request for information rather than an automatic conclusion that a claim is false.",
+            "location": "paragraph 3",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C3",
+        "claim": "Our global freshwater withdrawal fell by 25% in 2025 compared with 2024.",
+        "status": "not_comparable",
+        "test_types": [
+          "scope",
+          "time"
+        ],
+        "explanation": "The company and geographic boundaries changed. These figures cannot test a like-for-like global 25% reduction.",
+        "follow_up_question": "Can 2024 withdrawal be restated on the 2025 boundary?",
+        "evidence": [
+          {
+            "id": "D0004",
+            "quote": "Freshwater withdrawal in 2024 covers five European factories. The 2025 boundary covers eight factories across Europe and Asia. No restated 2024 figures are provided.",
+            "location": "paragraph 4",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": []
+      }
+    ],
+    "numeric_checks": [],
+    "warnings": [],
+    "regulation": {
+      "filename": "demo_regulation.md",
+      "version": "DEMO 2026-09 · FICTIONAL",
+      "sha256": "80d510a206f781fec9154ad2ca1300676fb155361d1680a8b04240ba244c7373",
+      "passage_count": 8,
+      "latest_version_verified": false,
+      "warnings": []
+    },
+    "regulation_passages_sent": 8,
+    "regulation_total_passages": 8,
+    "limitations": [
+      "Screening signals require human review; no legal compliance determination.",
+      "Uploaded version and legal applicability are not independently verified.",
+      "Quote existence is checked; semantic relevance and reasoning are not independently verified.",
+      "Long regulations use a lexical shortlist, so relevant provisions may be missed."
+    ]
+  },
+  {
+    "generated_at_utc": "2026-09-09T21:42:47.431024+00:00",
+    "mode": "Offline demo",
+    "model": null,
+    "summary": {
+      "contradicted": 0,
+      "insufficient_evidence": 0,
+      "not_comparable": 0,
+      "supported": 3
+    },
+    "findings": [
+      {
+        "claim_id": "C1",
+        "claim": "Owned-facility Scope 1 and 2 emissions fell by 20% in 2025 compared with 2020, using unchanged boundaries and methods.",
+        "status": "supported",
+        "test_types": [
+          "numeric",
+          "scope",
+          "time"
+        ],
+        "explanation": "The claimed reduction, scope, years and methods align with the disclosure. This establishes consistency within the supplied material, not independent verification.",
+        "follow_up_question": "Can the underlying emissions inventory be independently reviewed?",
+        "evidence": [
+          {
+            "id": "D0002",
+            "quote": "Owned-facility Scope 1 and 2 emissions were 100,000 tCO2e in 2020 and 80,000 tCO2e in 2025. Organizational boundaries and calculation methods are unchanged.",
+            "location": "paragraph 2",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0008",
+            "quote": "Article 6 — Product claims. Full-life-cycle product carbon neutrality claims require evidence addressing the product life cycle, residual emissions and the means of neutralization. A corporate Scope 1 and 2 inventory alone is not product-level substantiation.",
+            "location": "paragraph 8",
+            "quote_verified": true,
+            "candidate_only": true
+          },
+          {
+            "id": "R0003",
+            "quote": "Article 1 — Evidence. Environmental claims must be supported by evidence that covers the stated product, entity, reporting period and geographic scope. Missing evidence should trigger a request for information rather than an automatic conclusion that a claim is false.",
+            "location": "paragraph 3",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C2",
+        "claim": "Recycled material accounted for 70% by mass of cardboard packaging purchased in Europe in 2025.",
+        "status": "supported",
+        "test_types": [
+          "numeric",
+          "scope",
+          "metric_basis"
+        ],
+        "explanation": "The percentage, mass basis, material, geography and year align. Recycled content is not presented as recyclability.",
+        "follow_up_question": "Can supplier records substantiate the recycled material weights?",
+        "evidence": [
+          {
+            "id": "D0003",
+            "quote": "Of 1,000 tonnes of cardboard packaging purchased in Europe in 2025, 700 tonnes were recycled material. Recycled content was 70% by mass.",
+            "location": "paragraph 3",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0004",
+            "quote": "Article 2 — Metric basis. A reduction in emissions intensity must not be described as a reduction in absolute emissions. The claim must specify the metric, unit, baseline year and reporting boundary.",
+            "location": "paragraph 4",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      },
+      {
+        "claim_id": "C3",
+        "claim": "We aim to reduce owned-facility Scope 1 and 2 emissions by 50% by 2030 against 2020; this target has not yet been achieved.",
+        "status": "supported",
+        "test_types": [
+          "time",
+          "target_vs_actual"
+        ],
+        "explanation": "The statement accurately describes a future target and says it has not been achieved. This check does not establish feasibility of the target.",
+        "follow_up_question": "What milestones and financing support delivery of the target?",
+        "evidence": [
+          {
+            "id": "D0004",
+            "quote": "The target is a 50% reduction in owned-facility Scope 1 and 2 emissions by 2030 against 2020. It remains a future target and has not been achieved.",
+            "location": "paragraph 4",
+            "quote_verified": true
+          }
+        ],
+        "regulation_references": [],
+        "regulation_status": "not_assessed",
+        "regulation_explanation": "No validated regulatory assessment. Upload relevant regulation and run live AI analysis.",
+        "candidate_regulation_passages": [
+          {
+            "id": "R0008",
+            "quote": "Article 6 — Product claims. Full-life-cycle product carbon neutrality claims require evidence addressing the product life cycle, residual emissions and the means of neutralization. A corporate Scope 1 and 2 inventory alone is not product-level substantiation.",
+            "location": "paragraph 8",
+            "quote_verified": true,
+            "candidate_only": true
+          },
+          {
+            "id": "R0006",
+            "quote": "Article 4 — Future targets. A future emissions target must be clearly distinguished from achieved performance. A net zero target for a future year must not be presented as net zero already achieved.",
+            "location": "paragraph 6",
+            "quote_verified": true,
+            "candidate_only": true
+          }
+        ]
+      }
+    ],
+    "numeric_checks": [
+      {
+        "metric": "Owned-facility Scope 1 + 2 emissions",
+        "unit": "tCO2e",
+        "baseline_year": 2020,
+        "current_year": 2025,
+        "baseline": 100000,
+        "current": 80000,
+        "calculated_change_pct": -20.0,
+        "method": "Python arithmetic on authored synthetic facts; not model-extracted."
+      }
+    ],
+    "warnings": [],
+    "regulation": {
+      "filename": "demo_regulation.md",
+      "version": "DEMO 2026-09 · FICTIONAL",
+      "sha256": "80d510a206f781fec9154ad2ca1300676fb155361d1680a8b04240ba244c7373",
+      "passage_count": 8,
+      "latest_version_verified": false,
+      "warnings": []
+    },
+    "regulation_passages_sent": 8,
+    "regulation_total_passages": 8,
+    "limitations": [
+      "Screening signals require human review; no legal compliance determination.",
+      "Uploaded version and legal applicability are not independently verified.",
+      "Quote existence is checked; semantic relevance and reasoning are not independently verified.",
+      "Long regulations use a lexical shortlist, so relevant provisions may be missed."
+    ]
+  }
+]
