@@ -8,17 +8,23 @@ import threading
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-from ai_client import live_analysis
-from documents import Passage, parse_document, select_passages, verify_reference
-from engine import demo_analysis, load_cases, make_report, prepare, validate_findings
-from render import render_report
+sys.path.insert(0, str(ROOT / "src"))
+from green_claims.generation.client import live_analysis
+from green_claims.models import Passage
+from green_claims.ingestion.parsers import parse_document
+from green_claims.retrieval.lexical import select_passages
+from green_claims.validation.citations import verify_reference
+from green_claims.demo.fixtures import demo_analysis, load_cases
+from green_claims.reporting.reports import make_report
+from green_claims.pipeline import prepare
+from green_claims.validation.findings import validate_findings
+from green_claims.reporting.html import render_report
 
 
 class WorkflowTests(unittest.TestCase):
     def setUp(self):
         self.cases = load_cases()
-        self.reg = parse_document("rules.md", (ROOT / "data/demo_regulation.md").read_bytes(), "v1")
+        self.reg = parse_document("rules.md", (ROOT / "mvp_demo/data/demo_regulation.md").read_bytes(), "v1")
         self.case = self.cases[0]
         self.context = prepare("\n".join(self.case["claims"]), self.case["disclosure"], self.reg)
         self.findings, _ = demo_analysis(self.context)
@@ -174,7 +180,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(warnings, [])
 
     def test_notebook_self_contained_without_optional_ui(self):
-        notebook = json.loads((ROOT / "Green_Claims_Databricks.ipynb").read_text())
+        notebook = json.loads((ROOT / "mvp_demo/Green_Claims_Databricks.ipynb").read_text())
         namespace = {"__name__": "__main__"}
         for index, cell in enumerate(notebook["cells"]):
             if cell["cell_type"] == "code":

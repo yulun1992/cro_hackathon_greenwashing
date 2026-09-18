@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "green-claims-rag"
+version = "0.2.0"
+description = "Modular evidence-grounded green claims screening"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pypdf>=6.10,<7"]
+notebook = ["ipywidgets>=7.7,<9", "ipython>=8,<10"]
+
+[project.scripts]
+green-claims = "green_claims.interfaces.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"green_claims.demo" = ["data/*.json", "data/*.md"]
