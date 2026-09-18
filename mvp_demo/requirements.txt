@@ -1,0 +1,4 @@
+# Optional: needed only to parse text-based PDF regulations.
+pypdf>=6.10,<7
+# Notebook UI (normally included in supported Databricks runtimes).
+ipywidgets>=7.7,<9
