@@ -32,3 +32,13 @@ The PDF and widget checks require their optional dependencies. The core package 
 ## Limits
 
 No company Azure endpoint, company credentials or live model output was used. Request parity does not guarantee identical stochastic model answers. Actual Databricks browser rendering, permissions and network access still need a check in the company environment. These tests do not measure regulatory completeness, semantic citation relevance or detection accuracy. Multi-regulation ingestion and temporal verification remain a proposal.
+
+## Web interface follow-up — 2026-09-19
+
+- Python suite: **34 passed, 1 optional ipywidgets test skipped** (widget dependency unavailable in this web-test environment).
+- React interaction suite: **7 passed** using Testing Library and jsdom.
+- TypeScript check and Vite production build: passed.
+- The real local HTTP server served built frontend assets, returned synthetic cases and completed Case A with three contradicted findings.
+- New API tests confirm all three reports match the existing pipeline apart from timestamps, including upload replacement and source inspection data. They also check Live AI validation/failure paths using a fake generator, safe credential errors, input/file limits and same-origin requests.
+- UI tests cover result filters, full-source inspection, case changes, result invalidation, ignored late responses, upload/version fields, errors/retry, Live AI labeling and JSON download initiation.
+- The managed browser could not open the local preview (`ERR_BLOCKED_BY_CLIENT`). Actual browser rendering, mobile layout, native file chooser/download behavior and live Azure connectivity are **not verified**. No public deployment was created.

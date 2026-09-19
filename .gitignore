@@ -11,3 +11,8 @@ reports/
 build/
 dist/
 .ipynb_checkpoints/
+node_modules/
+frontend/dist/
+playwright-report/
+test-results/
+*.tsbuildinfo

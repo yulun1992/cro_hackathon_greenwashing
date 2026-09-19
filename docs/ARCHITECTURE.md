@@ -75,6 +75,10 @@ For another retriever, pass `retriever=...` to `run_review()`. For another appro
 
 ## Deliberately preserved limitations
 
-Paragraph/character chunking has no overlap, hierarchy or table reconstruction. All claims share one regulation shortlist. Disclosure is included in full within its existing limit. No embeddings, reranker, OCR, persistent index, batch ETL, API server, immutable audit storage, multi-document registry or automated temporal validity checking is implemented. The baseline is deliberately small enough to evaluate each future change against known behavior.
+Paragraph/character chunking has no overlap, hierarchy or table reconstruction. All claims share one regulation shortlist. Disclosure is included in full within its existing limit. No embeddings, reranker, OCR, persistent index, batch ETL, immutable audit storage, multi-document registry or automated temporal validity checking is implemented. A local FastAPI adapter and React interface are now available; see [web setup](WEB_APP.md). The baseline is deliberately small enough to evaluate each future change against known behavior.
 
 The package includes only synthetic demo resources. Generated reports remain outside version control. The archive retains historical relative documentation and original GitHub URLs as evidence of the MVP; current entry points are linked from the root README.
+
+## Web adapter
+
+`interfaces/api.py` provides the web boundary. `frontend/` owns the React UI. The API invokes the same pipeline and returns source passages separately for inspection. See [WEB_APP.md](WEB_APP.md) for configuration, data flow, testing and deployment limitations.
