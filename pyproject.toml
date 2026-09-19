@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "green-claims-rag"
-version = "0.2.0"
+version = "0.3.0"
 description = "Modular evidence-grounded green claims screening"
 requires-python = ">=3.10"
 dependencies = []
@@ -13,8 +13,12 @@ dependencies = []
 pdf = ["pypdf>=6.10,<7"]
 notebook = ["ipywidgets>=7.7,<9", "ipython>=8,<10"]
 
+web = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "python-multipart>=0.0.18,<1"]
+test-web = ["httpx>=0.27,<1"]
+
 [project.scripts]
 green-claims = "green_claims.interfaces.cli:main"
+green-claims-web = "green_claims.interfaces.api:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

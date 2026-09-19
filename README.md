@@ -4,12 +4,26 @@ A modular Python application for comparing environmental claims with supplied di
 
 **This refactor preserves the existing method and results.** It separates ingestion, retrieval, generation, validation and presentation. Retrieval is still the original lexical baseline; embeddings, a vector database, multiple regulations and effective-date verification are not implemented yet.
 
+## Web interface
+
+An independent React frontend now connects to the existing pipeline through FastAPI. It supports editable claims/disclosure, regulation upload, Offline demo / Live AI, result filters, full source-passage inspection and JSON export.
+
+```bash
+python -m pip install -e '.[web,pdf]'
+npm ci --prefix frontend
+npm run build --prefix frontend
+green-claims-web
+```
+
+Open `http://127.0.0.1:8000` on the machine running the server. Live AI requires server-side model configuration. This is a local application; it has not been publicly deployed. See [web setup and testing](docs/WEB_APP.md).
+
 ## Choose an entry point
 
 | Purpose | Entry point |
 | --- | --- |
 | Original one-file Databricks demo, unchanged | [`mvp_demo/Green_Claims_Databricks.ipynb`](mvp_demo/Green_Claims_Databricks.ipynb) |
 | New modular Databricks notebook, with optional upload UI | [`notebooks/Green_Claims_RAG.ipynb`](notebooks/Green_Claims_RAG.ipynb) |
+| Independent web workspace | `green-claims-web` — see [setup](docs/WEB_APP.md) |
 | Local command line | `python -m green_claims` or `green-claims` after installation |
 | Python application integration | `green_claims.pipeline.run_review()` |
 | Original business context and methodology | [`mvp_demo/BUSINESS_AND_METHODOLOGY_SUMMARY.md`](mvp_demo/BUSINESS_AND_METHODOLOGY_SUMMARY.md) |
@@ -77,6 +91,8 @@ In Databricks, fill `Settings(secret_scope=..., secret_key=...)` with **secret n
 | `src/green_claims/demo/` | Explicit fixture replay, packaged synthetic data and arithmetic |
 | `src/green_claims/pipeline.py` | One orchestration service for every entry point |
 | `src/green_claims/interfaces/` | CLI and optional notebook widgets |
+| `frontend/` | React + TypeScript interface and interaction tests |
+| `src/green_claims/interfaces/api.py` | FastAPI adapter and local web launcher |
 | `notebooks/` | Thin Databricks entry point |
 | `tests/` | Behavioral tests and comparisons against the archived MVP |
 | `docs/` | Architecture, migration, validation and proposed next feature |
