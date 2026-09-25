@@ -167,7 +167,37 @@ describe("review workspace", () => {
       ([url]) => url === "/api/reviews",
     )?.[1]?.body as FormData;
     expect(body.get("mode")).toBe("Live AI");
+    expect(body.get("verification")).toBe("facts");
     expect(body.has("api_key")).toBe(false);
+  });
+
+  it("shows a flagged numeric cross-check and submits optional judge selection", async () => {
+    const response = structuredClone(fixtures.results.A);
+    response.report.mode = "Live AI";
+    const cited = response.report.findings[0].evidence[0];
+    (response.report.findings[0] as typeof response.report.findings[0] & { verification: unknown }).verification = {
+      claim_id: "C1", human_review_required: true,
+      review_reasons: ["Arithmetic conflicts with primary supported finding"],
+      facts: { status: "aligned", note: "", claim_fact: null, disclosure_fact: null,
+        dimensions: [{ dimension: "metric_basis", claim: "absolute", disclosure: "absolute", status: "aligned" }],
+        arithmetic: { status: "mismatch", formula: "(current / baseline - 1) * 100",
+          claimed_value: "-30", calculated_value: "8.00", absolute_tolerance: "0.1",
+          operands: { current: { text: "108", reference: cited } } } },
+      judge: { status: "uncertain", comparison_verdict: "uncertain", regulation_verdict: "not_assessed",
+        issues: [], explanation: "Review the company disclosure.", disclosure_references: [cited],
+        regulation_references: [], warnings: [] },
+    };
+    const { user, fetchMock } = await setup({ live: true, review: () => reply(response) });
+    await user.click(screen.getByRole("button", { name: "Live AI" }));
+    await user.selectOptions(screen.getByLabelText("Evidence cross-check"), "facts_and_judge");
+    await user.click(screen.getByRole("button", { name: "Compare & screen" }));
+    const first = (await screen.findAllByRole("article"))[0];
+    await user.click(within(first).getByText(/Evidence cross-check/));
+    expect(within(first).getByText(/Arithmetic conflicts with primary supported finding/)).toBeInTheDocument();
+    expect(within(first).getByText(/claim -30; calculated 8.00/)).toBeInTheDocument();
+    expect(within(first).getByText(/LLM judge:/)).toBeInTheDocument();
+    const body = fetchMock.mock.calls.find(([url]) => url === "/api/reviews")?.[1]?.body as FormData;
+    expect(body.get("verification")).toBe("facts_and_judge");
   });
 
   it("exports only the report JSON and explains the actual baseline method", async () => {

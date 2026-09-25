@@ -40,15 +40,20 @@ def show_review(settings: Settings | None = None, dbutils=None):
     settings = settings or Settings.from_env()
     CASES = load_cases()
 
-    def run_review(claims_text, disclosure_text, regulation, mode="Offline demo"):
+    def run_review(claims_text, disclosure_text, regulation, mode="Offline demo", verification="none"):
         client = settings.make_client(dbutils) if mode == "Live AI" else None
         return pipeline_review(claims_text, disclosure_text, regulation, mode,
-                               generator=client, model=settings.model, language=settings.language)
+                               generator=client, model=settings.model, language=settings.language,
+                               verification=verification)
 
     last_report = None
     case_widget = widgets.Dropdown(options=[(c["name"], c["id"]) for c in CASES] + [("Custom material", "custom")],
                                    description="Case:", layout=widgets.Layout(width="95%"))
     mode_widget = widgets.Dropdown(options=["Offline demo", "Live AI"], description="Mode:")
+    verification_widget = widgets.Dropdown(
+        options=[("Original analysis", "none"), ("Facts and arithmetic", "facts"),
+                 ("Facts and LLM judge", "facts_and_judge")],
+        value="none", description="Verification:", layout=widgets.Layout(width="80%"))
     claims_widget = widgets.Textarea(value="\n".join(CASES[0]["claims"]), description="Claims:",
                                      layout=widgets.Layout(width="98%", height="130px"))
     disclosure_widget = widgets.Textarea(value=CASES[0]["disclosure"], description="Disclosure:",
@@ -85,7 +90,8 @@ def show_review(settings: Settings | None = None, dbutils=None):
         try:
             regulation = resolve_regulation(source_widget.value, version_widget.value,
                                              upload_widget.value, path_widget.value)
-            last_report = run_review(claims_widget.value, disclosure_widget.value, regulation, mode_widget.value)
+            last_report = run_review(claims_widget.value, disclosure_widget.value, regulation,
+                                     mode_widget.value, verification_widget.value)
             with output_widget:
                 display(HTML(render_report(last_report)))
             status_widget.value = "<b>Review ready.</b>"
@@ -102,15 +108,15 @@ def show_review(settings: Settings | None = None, dbutils=None):
             compare_button.disabled = False
 
     case_widget.observe(change_case, names="value")
-    for widget in [claims_widget, disclosure_widget, source_widget, version_widget, path_widget, upload_widget, mode_widget]:
+    for widget in [claims_widget, disclosure_widget, source_widget, version_widget, path_widget, upload_widget, mode_widget, verification_widget]:
         widget.observe(invalidate, names="value")
     compare_button.on_click(compare_clicked)
     display(widgets.VBox([
         widgets.HTML("<h2>Green Claims Checker</h2><p>Comparison → Testing → Screening</p><p><b>Synthetic examples.</b> Offline demo replays authored findings. Live AI sends inputs to your configured Azure endpoint.</p>"),
-        case_widget, mode_widget,
+        case_widget, mode_widget, verification_widget,
         widgets.HTML("<small>One claim per line. Edited/custom inputs require Live AI.</small>"),
         claims_widget, disclosure_widget, source_widget, upload_widget, path_widget, version_widget,
         widgets.HTML("<small>Upload regulation replaces the fictional standard. The app does not independently verify the latest version. If the upload button is unavailable, upload via Databricks and select Workspace file. TXT/MD require no extra parser; text PDFs require pypdf.</small>"),
         compare_button, status_widget, output_widget]))
-    return {"compare_button": compare_button, "mode": mode_widget, "case": case_widget,
+    return {"compare_button": compare_button, "mode": mode_widget, "verification": verification_widget, "case": case_widget,
             "source": source_widget, "upload": upload_widget, "get_report": lambda: last_report}

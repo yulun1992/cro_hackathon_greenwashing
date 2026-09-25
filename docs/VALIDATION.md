@@ -42,3 +42,9 @@ No company Azure endpoint, company credentials or live model output was used. Re
 - New API tests confirm all three reports match the existing pipeline apart from timestamps, including upload replacement and source inspection data. They also check Live AI validation/failure paths using a fake generator, safe credential errors, input/file limits and same-origin requests.
 - UI tests cover result filters, full-source inspection, case changes, result invalidation, ignored late responses, upload/version fields, errors/retry, Live AI labeling and JSON download initiation.
 - The managed browser could not open the local preview (`ERR_BLOCKED_BY_CLIENT`). Actual browser rendering, mobile layout, native file chooser/download behavior and live Azure connectivity are **not verified**. No public deployment was created.
+
+## Optional fact verification follow-up — 2026-09-25
+
+- Python suite in this runtime: **44 tests, 32 passed, 12 skipped**. The new nine behavioral checks passed, including sign mismatch, noncomparable dimensions, fabricated numbers, invalid judge citations, stage failure isolation and a three-call simulated Chat Completions server. The 11 FastAPI tests and one widget test were skipped because optional dependencies are unavailable here. An attempt to install web dependencies timed out on the package host, so the API integration suite was not rerun for this change.
+- React interaction suite: **8 passed** with the new verification selection and flagged result display. TypeScript and Vite production build passed. Notebook code cells compile.
+- No company endpoint or human-labeled evaluation set was available. These tests check bounded code behavior, not model extraction accuracy, judge quality, legal applicability or real browser rendering.

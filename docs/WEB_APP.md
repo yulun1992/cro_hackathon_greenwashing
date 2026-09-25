@@ -23,8 +23,8 @@ The browser does not need Python. Python and Node are needed on the machine used
 2. Review/edit one environmental claim per line and the disclosure text.
 3. Choose the fictional standard, upload one PDF/TXT/MD regulation, or select No regulation.
 4. For an uploaded regulation, enter a version label. This does not verify its currency.
-5. Choose Offline demo or Live AI, then click Compare & screen.
-6. Filter by comparison status, expand regulatory assessments and click a source quotation to inspect its full extracted passage.
+5. Choose Offline demo or Live AI. In Live AI, choose Original analysis (one model call), Facts & arithmetic (two), or Facts & LLM judge (three), then click Compare & screen.
+6. Filter by comparison status, expand regulatory and evidence cross-checks, and click a source quotation to inspect its full extracted passage.
 7. Export the original report JSON for an evidence record.
 
 Offline demo accepts only the three unchanged examples and returns authored findings. Uploaded regulation can supply candidate passages, but offline mode does not assess regulation. Custom/edited material requires Live AI. Errors never fall back to authored results. Changing inputs clears the previous report and export; late responses are ignored so old results cannot appear under new inputs.
@@ -65,11 +65,11 @@ Use the Vite address printed in terminal 2. Vite proxies `/api` to the Python se
 | --- | --- |
 | `GET /api/config` | Live-mode configuration availability and input limits; no endpoints or credentials |
 | `GET /api/cases` | Only synthetic IDs, names, claims and disclosure; no expected findings |
-| `POST /api/reviews` | Multipart fields `claims`, `disclosure`, `mode`, `regulation_source`, `version`, optional `regulation_file` |
+| `POST /api/reviews` | Multipart fields `claims`, `disclosure`, `mode`, `verification`, `regulation_source`, `version`, optional `regulation_file` |
 
-`mode` is exactly `Offline demo` or `Live AI`. `regulation_source` is `demo`, `upload`, or `none`. Uploaded files are required for `upload` and rejected for other source selections, preventing silent source mismatches.
+`mode` is exactly `Offline demo` or `Live AI`. `verification` is `none`, `facts`, or `facts_and_judge` (Live AI only). `regulation_source` is `demo`, `upload`, or `none`. Uploaded files are required for `upload` and rejected for other source selections, preventing silent source mismatches.
 
-Successful responses contain `{report, sources}`. `report` retains the existing pipeline schema and fingerprint. `sources` contains the disclosure passages and selected regulation passages actually available to the model, for the source inspector. Report conclusions are not inferred by frontend JavaScript.
+Successful responses contain `{report, sources}`. `report` retains the existing pipeline fields and input fingerprint; requested verification adds stage results, per-finding flags and a verification fingerprint. `sources` contains the disclosure passages and selected regulation passages actually available to the model, for the source inspector. Report conclusions are not inferred by frontend JavaScript. See [verification method and regulatory role](FACT_VERIFICATION.md).
 
 The adapter prepares an inspection context and runs the deterministic baseline pipeline with the same inputs. If future retrieval becomes nondeterministic or stateful, return the actual run context from the pipeline instead of preparing it twice.
 
@@ -87,6 +87,6 @@ API tests compare reports with the Python pipeline and cover upload replacement,
 
 **No public website has been deployed.** The supplied launcher serves locally and is not a multi-user authenticated service. Company deployment still needs its normal hosting, authentication and network setup. The managed browser could not access the local preview in this environment (`ERR_BLOCKED_BY_CLIENT`), so real-browser visual layout, mobile rendering and download behavior remain to be checked. Real Azure model access was not exercised.
 
-The method is unchanged: paragraph/character chunking, no overlap, one regulation, a lexical shortlist for long regulation, exact quotation validation. No embeddings or temporal applicability checks were added.
+The retrieval method remains paragraph/character chunking, no overlap, one regulation and a lexical shortlist for long regulation. Optional fact verification uses model extraction and conditional arithmetic; it does not establish semantic truth, legal applicability or temporal validity. No embeddings or temporal applicability checks were added.
 
 Implementation references: [FastAPI file uploads](https://fastapi.tiangolo.com/tutorial/request-files/) and [FastAPI static serving](https://fastapi.tiangolo.com/tutorial/static-files/).
