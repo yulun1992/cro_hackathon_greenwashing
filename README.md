@@ -8,6 +8,8 @@ A modular Python application for comparing environmental claims with supplied di
 
 An independent React frontend now connects to the existing pipeline through FastAPI. It supports editable claims/disclosure, regulation upload, Offline demo / Live AI, result filters, full source-passage inspection and JSON export.
 
+Live AI can add [structured fact alignment, conditional arithmetic and a second-pass LLM judge](docs/FACT_VERIFICATION.md). The original finding and the judge opinion remain distinct; conflicting or incomplete checks are flagged for human review.
+
 ```bash
 python -m pip install -e '.[web,pdf]'
 npm ci --prefix frontend
@@ -62,6 +64,7 @@ Configure `AZURE_OPENAI_CHAT_URL` (full chat/completions URL), `AZURE_OPENAI_DEP
 ```bash
 python -m green_claims --mode live --case A \
   --regulation /path/to/regulation.pdf --version 'reviewed-version-label' \
+  --verification facts_and_judge \
   --output-dir reports/live
 ```
 
@@ -87,6 +90,7 @@ In Databricks, fill `Settings(secret_scope=..., secret_key=...)` with **secret n
 | `src/green_claims/retrieval/` | Retriever interface and lexical context selection |
 | `src/green_claims/generation/` | Context serialization, preserved prompt, model transport |
 | `src/green_claims/validation/` | Output structure and source quotation checks |
+| `src/green_claims/verification/` | Optional fact extraction, conditional Decimal arithmetic and judge opinion |
 | `src/green_claims/reporting/` | Report schema, fingerprint and escaped HTML |
 | `src/green_claims/demo/` | Explicit fixture replay, packaged synthetic data and arithmetic |
 | `src/green_claims/pipeline.py` | One orchestration service for every entry point |
@@ -112,4 +116,4 @@ cd mvp_demo
 python -m unittest discover -s tests -v
 ```
 
-See [architecture and migration](docs/ARCHITECTURE.md), [validation results](docs/VALIDATION.md), and [multiple regulations and temporal validity proposal](docs/NEXT_FEATURE_MULTI_REGULATION.md).
+See [architecture and migration](docs/ARCHITECTURE.md), [fact verification and regulation's role](docs/FACT_VERIFICATION.md), [validation results](docs/VALIDATION.md), and [multiple regulations and temporal validity proposal](docs/NEXT_FEATURE_MULTI_REGULATION.md).

@@ -7,10 +7,16 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 from urllib.parse import urlparse
 from green_claims.generation.context import build_messages
+from green_claims.verification.prompts import extraction_messages, judge_messages
 from green_claims.validation.findings import validate_findings
 
 def request_analysis(context: dict, api_url: str, model: str, api_key: str = "",
                   auth_type: str = "bearer", language: str = "English"):
+    return request_json(build_messages(context, language), api_url, model, api_key, auth_type)
+
+
+def request_json(messages: list[dict], api_url: str, model: str, api_key: str = "",
+                 auth_type: str = "bearer"):
     parsed = urlparse(api_url)
     if parsed.scheme not in {"https", "http"} or not parsed.hostname or parsed.username or parsed.password:
         raise ValueError("Enter a full HTTP(S) chat/completions endpoint without credentials in its URL.")
@@ -21,7 +27,7 @@ def request_analysis(context: dict, api_url: str, model: str, api_key: str = "",
     headers = {"Content-Type": "application/json"}
     if api_key:
         headers["api-key" if auth_type == "api-key" else "Authorization"] = api_key if auth_type == "api-key" else f"Bearer {api_key}"
-    body = {"model": model.strip(), "messages": build_messages(context, language)}
+    body = {"model": model.strip(), "messages": messages}
     # No provider-specific response_format/temperature parameters; JSON is validated locally.
     class NoRedirect(HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, hdrs, newurl):
@@ -70,6 +76,15 @@ class ChatCompletionsClient:
 
     def generate(self, context: dict, language: str = "English") -> dict:
         return request_analysis(context, self.api_url, self.model, self.api_key, self.auth_type, language)
+
+    def extract_facts(self, context: dict, language: str = "English") -> dict:
+        return request_json(extraction_messages(context, language), self.api_url, self.model,
+                            self.api_key, self.auth_type)
+
+    def judge(self, context: dict, findings: list[dict], fact_checks: list[dict],
+              language: str = "English") -> dict:
+        return request_json(judge_messages(context, findings, fact_checks, language), self.api_url,
+                            self.model, self.api_key, self.auth_type)
 
 
 def live_analysis(context, api_url, model, api_key="", auth_type="bearer", language="English"):

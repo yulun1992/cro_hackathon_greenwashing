@@ -32,6 +32,40 @@ def source_html(ref, source_name):
             f'{text(ref["location"])} · quote verified</p><blockquote>{text(ref["quote"])}</blockquote>')
 
 
+def verification_html(value):
+    reasons = ", ".join(value["review_reasons"]) or "No flagged conflict"
+    result = f'<details><summary>Evidence cross-check · {text(reasons)}</summary>'
+    facts = value.get("facts")
+    if facts:
+        result += f'<p>Fact alignment: {text(facts["status"])}. Extracted meaning requires human review.</p>'
+        result += '<table><tr><th>Dimension</th><th>Claim</th><th>Disclosure</th><th>Check</th></tr>'
+        for dimension in facts["dimensions"]:
+            result += '<tr>' + ''.join(f'<td>{text(dimension.get(key) or "—")}</td>' for key in
+                                       ("dimension", "claim", "disclosure", "status")) + '</tr>'
+        result += '</table>'
+        arithmetic = facts["arithmetic"]
+        result += f'<p>Arithmetic: {text(arithmetic["status"])}. {text(arithmetic.get("reason", ""))}</p>'
+        if arithmetic.get("formula"):
+            result += f'<p>{text(arithmetic["formula"])}: claimed {text(arithmetic["claimed_value"])}; calculated {text(arithmetic["calculated_value"])}; tolerance {text(arithmetic["absolute_tolerance"])}</p>'
+            for name, operand in arithmetic["operands"].items():
+                result += f'<p>{text(name)} = {text(operand["text"])}</p>' + source_html(operand["reference"], "Quoted operand")
+        if facts.get("note"):
+            result += f'<p>Extraction note: {text(facts["note"])}</p>'
+    else:
+        result += '<p>Fact extraction unavailable; arithmetic not verified.</p>'
+    judge = value.get("judge")
+    if judge:
+        result += f'<p>LLM judge opinion: comparison {text(judge["comparison_verdict"])}; regulation {text(judge["regulation_verdict"])}.</p>'
+        result += f'<p>{text(judge["explanation"])}</p>'
+        for ref in judge["disclosure_references"]:
+            result += source_html(ref, "Disclosure")
+        for ref in judge["regulation_references"]:
+            result += source_html(ref, "Regulation")
+        for warning in judge["warnings"]:
+            result += f'<p>{text(warning)}</p>'
+    return result + '</details>'
+
+
 def report_body(report: dict) -> str:
     source = report.get("regulation")
     source_name = f'{source["filename"]} · {source["version"]}' if source else "No regulation supplied"
@@ -54,7 +88,10 @@ def report_body(report: dict) -> str:
         result += "".join(source_html(ref, source_name) for ref in f["regulation_references"])
         for ref in f.get("candidate_regulation_passages", []):
             result += '<details><summary>Candidate passage only · not a regulatory conclusion</summary>' + source_html(ref, source_name) + '</details>'
-        result += f'</div></div><p><b>Suggested follow-up:</b> {text(f["follow_up_question"])}</p></section>'
+        result += f'</div></div><p><b>Suggested follow-up:</b> {text(f["follow_up_question"])}</p>'
+        if f.get("verification"):
+            result += verification_html(f["verification"])
+        result += '</section>'
     if report.get("numeric_checks"):
         result += '<details><summary>Python arithmetic · synthetic source figures</summary>'
         for fact in report["numeric_checks"]:

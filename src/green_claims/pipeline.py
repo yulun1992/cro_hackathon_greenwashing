@@ -6,6 +6,7 @@ from green_claims.generation.client import Generator
 from green_claims.demo.fixtures import demo_analysis
 from green_claims.validation.findings import validate_findings
 from green_claims.reporting.reports import make_report, fingerprint
+from green_claims.verification.execution import require_stages, verify
 
 def parse_claims(text: str) -> list[dict]:
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -30,9 +31,13 @@ def prepare(claims_text: str, disclosure_text: str, regulation: Document | None,
 
 def run_review(claims_text: str, disclosure_text: str, regulation: Document | None = None,
                mode: str = "Offline demo", *, generator: Generator | None = None,
-               retriever: Retriever | None = None, model: str = "", language: str = "English") -> dict:
+               retriever: Retriever | None = None, model: str = "", language: str = "English",
+               verification: str = "none") -> dict:
     if mode not in {"Offline demo", "Live AI"}:
         raise ValueError("Mode must be Offline demo or Live AI.")
+    if mode == "Offline demo" and verification != "none":
+        raise ValueError("Verification stages require Live AI.")
+    require_stages(generator, verification)
     context = prepare(claims_text, disclosure_text, regulation, retriever)
     if mode == "Offline demo":
         findings, warnings = demo_analysis(context)
@@ -44,4 +49,11 @@ def run_review(claims_text: str, disclosure_text: str, regulation: Document | No
         warnings.append("Long regulation: only a keyword shortlist was sent to the model. Relevant provisions may be missed.")
     report = make_report(context, findings, warnings, mode, model)
     report["input_fingerprint"] = fingerprint(claims_text, disclosure_text, regulation, mode, model)
+    if verification != "none":
+        audit, stage_warnings = verify(context, findings, generator, verification, language)
+        report["verification"] = audit
+        report["warnings"].extend(stage_warnings)
+        # The old fingerprint represents inputs; the audit adds this run's stage choice.
+        report["verification_fingerprint"] = fingerprint(claims_text, disclosure_text, regulation,
+                                                            mode, model + ":" + verification)
     return report

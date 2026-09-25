@@ -29,6 +29,7 @@ import type {
   Result,
   Status,
 } from "./types";
+import VerificationDetails from "./VerificationDetails";
 
 const labels: Record<Status, string> = {
   contradicted: "Contradicted",
@@ -63,6 +64,7 @@ export default function App() {
   const [claims, setClaims] = useState("");
   const [disclosure, setDisclosure] = useState("");
   const [mode, setMode] = useState("Offline demo");
+  const [verification, setVerification] = useState("facts");
   const [source, setSource] = useState("demo");
   const [version, setVersion] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -173,6 +175,7 @@ export default function App() {
     body.set("claims", claims);
     body.set("disclosure", disclosure);
     body.set("mode", mode);
+    body.set("verification", mode === "Live AI" ? verification : "none");
     body.set("regulation_source", source);
     body.set("version", version || "Not specified");
     if (source === "upload" && file) body.set("regulation_file", file);
@@ -297,6 +300,7 @@ export default function App() {
             citation(ref, "regulation", n),
           )}
         </details>
+        {f.verification && <VerificationDetails value={f.verification} inspect={inspect} />}
         <div className="follow-up">
           <CircleHelp size={15} />
           <div>
@@ -411,6 +415,23 @@ export default function App() {
                   ? "Replays the three unchanged examples. No model call."
                   : "Analyzes your inputs with the server’s configured model."}
               </p>
+              {mode === "Live AI" && (
+                <>
+                  <label className="label" htmlFor="verification">Evidence cross-check</label>
+                  <div className="select-wrap">
+                    <select id="verification" value={verification} onChange={(e) => {
+                      invalidate();
+                      setVerification(e.target.value);
+                    }}>
+                      <option value="none">Original analysis · 1 model call</option>
+                      <option value="facts">Facts & arithmetic · 2 model calls</option>
+                      <option value="facts_and_judge">Facts & LLM judge · 3 model calls</option>
+                    </select>
+                    <ChevronDown size={15} />
+                  </div>
+                  <p className="mode-hint">Quoted facts are aligned and calculated when possible. The judge gives a separate review opinion.</p>
+                </>
+              )}
               {!config?.live_available && !initializing && (
                 <p className="connection-note">
                   Live AI needs endpoint and credentials configured on the
@@ -624,7 +645,7 @@ export default function App() {
                 </h2>
                 <p>
                   {busy
-                    ? "Preparing passages, comparing claims and checking source quotations. Live requests can take up to two minutes."
+                    ? "Preparing passages, comparing claims and checking source quotations. Each live model stage can take up to two minutes."
                     : stale
                       ? "Your previous results have been cleared. Compare again to review the updated material."
                       : "Start with a synthetic case or add your own material. Your findings and verifiable source excerpts will appear here."}

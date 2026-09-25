@@ -15,6 +15,8 @@ def main(argv=None):
     parser.add_argument("--claims", type=Path, help="UTF-8 text, one claim per line; requires --disclosure")
     parser.add_argument("--disclosure", type=Path, help="UTF-8 supporting disclosure")
     parser.add_argument("--mode", choices=["offline", "live"], default="offline")
+    parser.add_argument("--verification", choices=["none", "facts", "facts_and_judge"], default="none",
+                        help="Optional live fact extraction and second-pass judge; adds 1 or 2 model calls")
     sources = parser.add_mutually_exclusive_group()
     sources.add_argument("--regulation", type=Path, help="PDF/TXT/MD replacing the fictional standard")
     sources.add_argument("--no-regulation", action="store_true")
@@ -37,7 +39,7 @@ def main(argv=None):
         mode = "Live AI" if args.mode == "live" else "Offline demo"
         client = settings.make_client() if args.mode == "live" else None
         report = run_review(claims, disclosure, regulation, mode, generator=client,
-                            model=settings.model, language=settings.language)
+                            model=settings.model, language=settings.language, verification=args.verification)
         args.output_dir.mkdir(parents=True, exist_ok=True)
         (args.output_dir / "review.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         (args.output_dir / "review.html").write_text(render_report(report), encoding="utf-8")

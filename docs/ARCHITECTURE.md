@@ -61,6 +61,8 @@ report = run_review(
 
 For another retriever, pass `retriever=...` to `run_review()`. For another approved model client, pass an object implementing `generate(context, language)`. The validator still runs centrally. Invalid modes and Live AI without a generator fail explicitly; a model error never falls back to authored results.
 
+Optional `verification="facts"` runs a separate fact-extraction prompt after the initial finding and then validates quotations and conditional arithmetic. `verification="facts_and_judge"` also runs a third model call for a separate opinion on factual and regulatory reasoning. Custom generators implement `extract_facts(context, language)` and optionally `judge(context, findings, fact_checks, language)`. Optional stage failures retain initial results with warnings. Details and limits: [fact verification](FACT_VERIFICATION.md).
+
 ## Migration map
 
 | Former file | New ownership |

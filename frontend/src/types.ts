@@ -26,6 +26,52 @@ export type Finding = {
   regulation_status: string;
   regulation_explanation: string;
   follow_up_question: string;
+  verification?: VerificationClaim;
+};
+export type Fact = {
+  metric: string | null;
+  unit: string | null;
+  period: string | null;
+  baseline_period: string | null;
+  scope: string | null;
+  metric_basis: string | null;
+  nature: string | null;
+  references: Reference[];
+  quote_verified: boolean;
+  extraction_semantics_verified: false;
+};
+export type FactCheck = {
+  status: "aligned" | "not_aligned" | "incomplete" | "unverified";
+  dimensions: { dimension: string; claim: string | null; disclosure: string | null; status: string }[];
+  claim_fact: Fact | null;
+  disclosure_fact: Fact | null;
+  arithmetic: {
+    status: "match" | "mismatch" | "not_computed";
+    reason?: string;
+    formula?: string;
+    claimed_value?: string;
+    calculated_value?: string;
+    absolute_tolerance?: string;
+    operands?: Record<string, { text: string; reference: Reference }>;
+  };
+  note: string;
+};
+export type JudgeReview = {
+  status: "agree" | "needs_review" | "uncertain";
+  comparison_verdict: string;
+  regulation_verdict: string;
+  issues: string[];
+  explanation: string;
+  disclosure_references: Reference[];
+  regulation_references: Reference[];
+  warnings: string[];
+};
+export type VerificationClaim = {
+  claim_id: string;
+  facts?: FactCheck;
+  judge?: JudgeReview;
+  human_review_required: boolean;
+  review_reasons: string[];
 };
 export type Report = {
   generated_at_utc: string;
@@ -43,6 +89,13 @@ export type Report = {
   warnings: string[];
   limitations: string[];
   input_fingerprint: string;
+  verification?: {
+    mode: string;
+    stages: { fact_extraction: string; judge: string };
+    expected_model_calls: number;
+    limitations: string[];
+    claims: VerificationClaim[];
+  };
   regulation: {
     filename: string;
     version: string;

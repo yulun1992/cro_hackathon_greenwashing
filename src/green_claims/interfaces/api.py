@@ -61,6 +61,7 @@ def create_app(settings: Settings | None = None, *, dbutils=None, static_dir: Pa
         claims: Annotated[str, Form(min_length=1, max_length=30_015)],
         disclosure: Annotated[str, Form(min_length=1, max_length=35_000)],
         mode: Annotated[Literal["Offline demo", "Live AI"], Form()] = "Offline demo",
+        verification: Annotated[Literal["none", "facts", "facts_and_judge"], Form()] = "none",
         regulation_source: Annotated[Literal["demo", "upload", "none"], Form()] = "demo",
         version: Annotated[str, Form(max_length=200)] = "Not specified",
         regulation_file: Annotated[UploadFile | None, File()] = None,
@@ -88,7 +89,8 @@ def create_app(settings: Settings | None = None, *, dbutils=None, static_dir: Pa
                 except Exception:
                     raise HTTPException(503, "Server-side model credentials could not be loaded.") from None
             report = run_review(claims, disclosure, regulation, mode,
-                                generator=client, model=settings.model, language=settings.language)
+                                generator=client, model=settings.model, language=settings.language,
+                                verification=verification)
             # Separate source inspection data from the unchanged pipeline report schema.
             return {"report": report, "sources": {
                 "disclosure": [asdict(p) for p in context["disclosure"]],
